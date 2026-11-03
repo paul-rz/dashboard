@@ -4,6 +4,8 @@
 //   (scripts/servidor_local.py, en 127.0.0.1);
 // - las clases (Calendar, solo lectura) y las tareas (Tasks, con casilla) se piden
 //   directo a Google con un token de una hora que también da el servidor local.
+// La misma página corre como archivo en la Mac (Dashboard.html, <html data-modo="local">):
+// ahí lee los .js que escriben los scripts del respaldo y las tareas son de solo lectura.
 // Este repositorio es público: aquí no hay datos ni secretos.
 
 // Tema: "forest" (#014421), "evergreen" (#05472A) o "dark" (#006400).
@@ -22,7 +24,8 @@ for (const k in t) document.documentElement.style.setProperty("--" + k, t[k]);
 
 const $ = id => document.getElementById(id);
 const hm = d => d.toLocaleTimeString("es-MX", {hour: "2-digit", minute: "2-digit"});
-const LLAVE = (() => { try { return localStorage.getItem("llave"); } catch (e) { return null; } })();
+const LOCAL = document.documentElement.dataset.modo === "local";
+const LLAVE = LOCAL ? null : (() => { try { return localStorage.getItem("llave"); } catch (e) { return null; } })();
 // Horas en que launchd corre el respaldo; las lee el servidor del plist.
 let HORAS = [];
 
@@ -30,7 +33,7 @@ function reloj() {
   const d = new Date();
   $("hora").textContent = hm(d);
   $("fecha").textContent = d.toLocaleDateString("es-MX", {weekday: "long", day: "numeric", month: "long"});
-  if (!LLAVE) return;
+  if (!LLAVE && !LOCAL) return;
   $("prox").textContent = HORAS.length ? `Sync en ${faltan()}` : "—";
   for (const c of $("l-prox").children) c.title = HORAS.length ? `Próximo sync: ${proxima()}` : "";
 }
@@ -83,7 +86,9 @@ async function local(ruta, opciones = {}) {
 
 // Las luces y la nota se recargan cada minuto; Google, cada 3 (y al volver a la pestaña).
 async function refrescar() {
-  if (!LLAVE || document.hidden) return;
+  if (document.hidden) return;
+  if (LOCAL) return refrescarLocal();
+  if (!LLAVE) return;
   try {
     const e = await local("/estado");
     HORAS = e.horas || [];
@@ -94,6 +99,24 @@ async function refrescar() {
   }
   reloj();
   refrescarGoogle();
+}
+// Dashboard.html (file://): estado.js, nota.js y agenda.js los escriben respaldo_obsidian.sh,
+// ultima_nota.py y google_agenda.py; se recargan como <script> porque file:// no deja usar fetch.
+function cargar(src) {
+  return new Promise(listo => {
+    const s = document.createElement("script");
+    s.src = src + "?" + Date.now();
+    s.onload = s.onerror = () => { s.remove(); listo(); };
+    document.head.appendChild(s);
+  });
+}
+async function refrescarLocal() {
+  await Promise.all(["estado", "nota", "agenda"].map(n => cargar(`scripts/${n}.js`)));
+  HORAS = (window.RESPALDO && window.RESPALDO.horas) || [];
+  pintar(window.RESPALDO);
+  pintarNota(window.NOTA);
+  if (window.AGENDA) pintarAgenda(agenda = window.AGENDA);
+  reloj();
 }
 
 const esc = x => String(x).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
@@ -130,6 +153,11 @@ const AVISOS = {
   popup: "No se abrió la ventana de Google.",
   cancelado: "Se canceló el permiso de Google.",
   sin_red: "sin internet",
+};
+// En Dashboard.html el permiso es el de google_agenda.py (cliente de escritorio), sin botón.
+const AVISOS_LOCAL = {
+  sin_autorizar: "Falta conectar Google: python3 scripts/google_agenda.py --autorizar",
+  permiso_vencido: "Venció el permiso de Google: python3 scripts/google_agenda.py --autorizar",
 };
 // Errores que se arreglan volviendo a dar el permiso (con el botón).
 const RECONECTAR = ["sin_autorizar", "permiso_vencido", "otra_cuenta", "faltan_permisos", "sin_refresh",
@@ -295,9 +323,10 @@ function nombreDia(clave) {
 }
 function pintarAgenda(a) {
   if (!a) return;
-  const err = a.error, aviso = AVISOS[err] || err;
+  const err = a.error, aviso = (LOCAL && AVISOS_LOCAL[err]) || AVISOS[err] || err;
   const fallo = err && err.startsWith("marcar:") ? err.slice(7) : null;   // lo puso marcar()
-  const boton = !RECONECTAR.includes(err) ? "" :
+  const reconectar = RECONECTAR.includes(err);
+  const boton = !reconectar || LOCAL ? "" :
     `<button class="conectar" type="button">${err === "sin_autorizar" ? "Conectar Google" : "Volver a conectar"}</button>`;
   if (boton) prepararConexion();
   if (!a.tareas) {   // todavía no hay nada de Google: el aviso va en lugar de las listas
@@ -316,12 +345,15 @@ function pintarAgenda(a) {
     f: new Date(e.todo_el_dia ? e.fin + "T00:00" : e.fin)}));
   const dia = [...new Set(ev.map(e => diaClave(e.i)))].find(d => ev.some(e => diaClave(e.i) === d && e.f > ahora));
   const delDia = ev.filter(e => diaClave(e.i) === dia);
+  // un color por materia (c0…c7 en estilo.css), por orden alfabético de las de la semana:
+  // con el mismo horario cada semana, cada materia conserva su color
+  const materias = [...new Set(ev.map(e => e.titulo))].sort();
   $("c-tit").textContent = dia ? `Clases · ${nombreDia(dia)}` : "Clases";
   $("c-lista").className = delDia.length ? "" : "aviso";
   $("c-lista").innerHTML = delDia.length ? delDia.map(e => {
     const cls = e.f <= ahora ? "paso" : e.i <= ahora ? "ahora" : "";
     const hora = e.todo_el_dia ? "todo el día" : `${h24(e.i)}–${h24(e.f)}`;
-    return `<div class="clase ${cls}"><span class="luz"></span><time>${hora}</time>` +
+    return `<div class="clase ${cls} c${materias.indexOf(e.titulo) % 8}"><time>${hora}</time>` +
       `<b>${esc(e.titulo)}${e.lugar ? `<small>${esc(e.lugar)}</small>` : ""}</b></div>`;
   }).join("") : "Sin clases en los próximos 7 días.";
 
@@ -342,12 +374,12 @@ function pintarAgenda(a) {
       const hecha = hechas.has(t.id) || hechas.has(t.padre), arrastrada = hecha && !hechas.has(t.id);
       return `<div class="tarea${raiz.includes(t) ? "" : " sub"}${hecha ? " hecha" : ""}" title="${esc(t.notas)}">` +
         `<button class="circ" type="button" role="checkbox" aria-checked="${hecha}" data-id="${esc(t.id)}"` +
-        ` aria-label="${hecha ? "Hecha" : "Marcar como hecha"}: ${esc(t.titulo)}"${arrastrada ? " disabled" : ""}></button>` +
+        ` aria-label="${LOCAL ? "Pendiente" : hecha ? "Hecha" : "Marcar como hecha"}: ${esc(t.titulo)}"${arrastrada || LOCAL ? " disabled" : ""}></button>` +
         `<span>${esc(t.titulo)}</span><time class="${c}">${v}</time></div>`;
     }).join("");
   }).join("");
   // Lo que hay que arreglar con permiso va en rojo con su botón; lo demás, como nota.
-  const rojo = !!boton || err === "sin_cliente" || err === "llave";
+  const rojo = reconectar || err === "sin_cliente" || err === "llave";
   $("t-pie").style.color = rojo ? "var(--rojo)" : "";
   $("t-pie").innerHTML = rojo ? esc(aviso) + boton
     : esc(`Google: ${hace(a.actualizado)}` + (fallo ? ` · no se pudo marcar (${AVISOS[fallo] || fallo})`
@@ -400,6 +432,7 @@ function sinMac(codigo) {
 
 // La bitácora del respaldo, en otra pestaña (el enlace no puede llevar la llave).
 $("r-log").addEventListener("click", async ev => {
+  if (LOCAL) return;   // en Dashboard.html el enlace abre scripts/respaldo.log directo
   ev.preventDefault();
   if (!LLAVE) return;
   const w = window.open("", "_blank");   // dentro del clic, para que no la bloquee Brave
@@ -419,6 +452,9 @@ $("r-log").addEventListener("click", async ev => {
 if (LLAVE) {
   try { agenda = JSON.parse(localStorage.getItem("agenda")); } catch (e) {}
   pintarAgenda(agenda);
+}
+if (LOCAL) $("r-log").href = "scripts/respaldo.log";
+if (LLAVE || LOCAL) {
   refrescar(); setInterval(refrescar, 60000);
   document.addEventListener("visibilitychange", refrescar);
 }

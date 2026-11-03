@@ -12,6 +12,9 @@
   --bg:#014421; --card:#01361a; --campo:#013017;
   --tx:#ffffff; --mut:#c8e6d2; --ac:#c8ffdc; --line:rgba(255,255,255,.16);
   --verde:#3ee27f; --ambar:#ffc94d; --rojo:#ff7a6b; --apagada:rgba(255,255,255,.22);
+  /* tarjetas de Google: azul para el calendario, índigo para las tareas (fondo, franja, borde, acento) */
+  --cal-fondo:#0b2e3f; --cal-cab:#114560; --cal-borde:#2b7395; --cal-ac:#9bd8ff;
+  --tar-fondo:#211a3a; --tar-cab:#2f2658; --tar-borde:#5f4ba8; --tar-ac:#cbbcff;
 }
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;background:var(--bg);color:var(--tx);font:16px/1.55 AHM,"Atkinson Hyperlegible Mono",ui-monospace,Menlo,monospace}
@@ -54,34 +57,46 @@ input:focus{border-color:var(--ac)}
 .log svg{width:15px;height:15px}
 .log:hover,.log:focus-visible{opacity:1;outline:none}
 
-/* clases (Google Calendar) y tareas (Google Tasks) */
+/* clases (Google Calendar) y tareas (Google Tasks): un punto más grandes que el respaldo y en blanco, para leerse de lejos */
+.tarjeta{font-size:14px;color:var(--tx)}
+#clases{background:var(--cal-fondo);border-color:var(--cal-borde)}
+#tareas{background:var(--tar-fondo);border-color:var(--tar-borde)}
 .tit{display:flex;align-items:center;gap:8px;color:var(--tx);font-weight:600;margin-bottom:8px}
+/* el encabezado de cada tarjeta es una franja de su color */
+#clases .tit,#tareas .tit{margin:-10px -14px 10px;padding:9px 14px;border-radius:9px 9px 0 0}
+#clases .tit{background:var(--cal-cab);border-bottom:1px solid var(--cal-borde)}
+#tareas .tit{background:var(--tar-cab);border-bottom:1px solid var(--tar-borde)}
 .tit svg{width:16px;height:16px;flex:none}
-.tit .cuenta{margin-left:auto;color:var(--mut);font-weight:400}
+.tit .cuenta{margin-left:auto;color:var(--tar-ac);font-weight:600}
 .aviso{font-size:12.5px;line-height:1.5}
-.pie-mini{margin-top:8px;font-size:11.5px;opacity:.85}
-.clase{display:grid;grid-template-columns:16px max-content minmax(0,1fr);column-gap:8px;align-items:baseline;padding:3px 0}
-.clase .luz{align-self:center;background:transparent}
-.clase.ahora .luz{background:var(--verde);box-shadow:0 0 6px var(--verde)}
+.pie-mini{margin-top:8px;font-size:11.5px;color:var(--mut)}
+/* cada clase con su color (app.js reparte c0…c7 por nombre): barra gruesa, fila teñida y la hora
+   en una píldora del color con texto oscuro; la que está en curso brilla en verde */
+.clase{--c:var(--cal-borde);display:grid;grid-template-columns:max-content minmax(0,1fr);column-gap:8px;align-items:baseline;margin:6px 0;padding:6px;border-left:6px solid var(--c);border-radius:6px;background:color-mix(in srgb,var(--c) 28%,var(--cal-fondo))}
+.c0{--c:#ff6b6b} .c1{--c:#ffc53d} .c2{--c:#4ade80} .c3{--c:#a78bfa}
+.c4{--c:#f472b6} .c5{--c:#fb923c} .c6{--c:#22d3ee} .c7{--c:#bef264}
+.clase.ahora{box-shadow:0 0 0 2px var(--verde),0 0 12px var(--verde)}
 .clase.paso{opacity:.55}
-.clase time{font-variant-numeric:tabular-nums;color:var(--tx);font-weight:600}
-.clase b{color:var(--tx);font-weight:500;overflow-wrap:anywhere}
-.clase small{display:block;font-size:12px;font-weight:400;color:var(--mut)}
+.clase time{font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;color:#0a1a22;background:var(--c);border-radius:4px;padding:1px 5px}
+.clase b{color:var(--tx);font-weight:600;overflow-wrap:break-word}
+.clase small{display:block;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.82)}
 .tareas{max-height:calc(100vh - 120px);overflow-y:auto}
-.lista{margin:8px 0 2px;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ac);font-weight:600}
-.tarea{display:grid;grid-template-columns:16px minmax(0,1fr) auto;column-gap:8px;align-items:baseline;padding:3px 0}
+/* cada lista de tareas, separada por una línea */
+.lista{margin:10px 0 2px;padding-top:8px;border-top:1px solid var(--tar-borde);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--tar-ac);font-weight:700}
+.lista:first-child{margin-top:0;padding-top:0;border-top:0}
+.tarea{display:grid;grid-template-columns:16px minmax(0,1fr) auto;column-gap:8px;align-items:baseline;padding:4px 0}
 .tarea.sub{padding-left:14px}
-.circ{width:11px;height:11px;padding:0;background:none;border:1.5px solid var(--tx);border-radius:50%;justify-self:center;align-self:center;position:relative;cursor:pointer}
+.circ{width:12px;height:12px;padding:0;background:none;border:2px solid var(--tx);border-radius:50%;justify-self:center;align-self:center;position:relative;cursor:pointer}
 .circ::after{content:"";position:absolute;inset:-7px}   /* el clic vale un poco alrededor del círculo */
 .circ:hover,.circ:focus-visible{border-color:var(--ac);outline:none}
 .circ:disabled{cursor:default}
-.tarea span{color:var(--tx);overflow-wrap:anywhere}
+.tarea span{color:var(--tx);font-weight:500;overflow-wrap:anywhere}
 .tarea.hecha .circ{background:var(--verde);border-color:var(--verde);box-shadow:0 0 6px var(--verde)}
 .tarea.hecha span{text-decoration:line-through;opacity:.55}
 .conectar{margin-top:8px;font:inherit;font-size:13px;color:var(--ac);background:none;border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
 .conectar:hover,.conectar:focus-visible{border-color:var(--ac);outline:none}
 .pie-mini .conectar{margin:0 0 0 6px;font-size:11.5px;padding:2px 8px}
-.tarea time{font-size:12px;white-space:nowrap;color:var(--ac);font-weight:500}
+.tarea time{font-size:12.5px;white-space:nowrap;color:var(--ac);font-weight:600}
 .tarea time.hoy{color:var(--ambar)} .tarea time.tarde{color:var(--rojo)}
 
 /* última nota editada */
