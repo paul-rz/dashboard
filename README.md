@@ -11,3 +11,6 @@ El repositorio es público y solo tiene código: ningún dato, ninguna llave ni 
 - Google se conecta con Google Identity Services (modelo de código, cliente "Aplicación
   web"). La página llama a Tasks y Calendar directamente, con tokens de una hora.
 - `acerca.html` y `privacidad.html` son las páginas que pide Google para publicar la app.
+- Antes de cada commit se corre `python3 versionar.py`: pone en las páginas una marca `?v=`
+  según el contenido de `estilo.css`, `llave.js`, `app.js` y `favicon.svg`, para que ni el
+  navegador ni el CDN de GitHub Pages sirvan una copia vieja.
