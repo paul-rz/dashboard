@@ -15,6 +15,19 @@ El repositorio es público y solo tiene código: ningún dato, ninguna llave ni 
   según el contenido de `estilo.css`, `llave.js`, `app.js` y `favicon.svg`, para que ni el
   navegador ni el CDN de GitHub Pages sirvan una copia vieja.
 
+## Dónde vive en la Mac
+
+```
+~/Downloads/obsidian/dashboard/   dentro de las bóvedas, así se respalda con ellas
+├── Dashboard.html   página de inicio local (la genera scripts/dashboard_local.py)
+├── web/             este repositorio
+├── scripts/         servidor local, respaldo, nota y agenda, con sus datos (no están aquí)
+└── docs/            brief, diagramas y el favicon original
+```
+
+Las rutas de los scripts salen de `scripts/rutas.py`, y los agentes de launchd le pasan a
+`RespaldoObsidian.app` la ruta del script, así que mover la carpeta no obliga a recompilar.
+
 ## Cómo funciona
 
 ### 1. El panorama
@@ -30,10 +43,10 @@ flowchart LR
     end
     SH["respaldo_obsidian.sh"]
     PYS["servidor_local.py<br/>127.0.0.1:47863"]
-    DATA["scripts/estado.js · nota.js · agenda.js"]
+    DATA["dashboard/scripts<br/>estado.js · nota.js · agenda.js"]
     CONF[("~/.config/obsidian-dashboard<br/>llave · cliente_web.json · token_web.json<br/>token.json · config.json")]
-    REPO["~/Developer/dashboard<br/>clon del repositorio"]
-    LOCAL["Dashboard.html<br/>file://, modo local"]
+    REPO["dashboard/web<br/>clon del repositorio"]
+    LOCAL["dashboard/Dashboard.html<br/>file://, modo local"]
   end
   subgraph NUBE["Internet"]
     GH["GitHub<br/>paul-rz/dashboard, solo código"]
@@ -150,13 +163,13 @@ flowchart TD
 
 La llave es aleatoria y vive en `~/.config/obsidian-dashboard/llave` y en el localStorage de mi
 Brave. Si se borran los datos del sitio, se crea otra con
-`python3 ~/Downloads/obsidian/scripts/servidor_local.py --llave`.
+`python3 ~/Downloads/obsidian/dashboard/scripts/servidor_local.py --llave`.
 
 ### 6. Un solo código para las dos páginas
 
 ```mermaid
 flowchart LR
-  subgraph R["~/Developer/dashboard"]
+  subgraph R["dashboard/web, el repositorio"]
     I["index.html"]
     C["estilo.css"]
     J["app.js · llave.js"]
@@ -178,7 +191,7 @@ Si cambia `estilo.css` o `app.js`, el local cambia al recargar y la web cuando s
 
 ```mermaid
 flowchart LR
-  E["Cambio en ~/Developer/dashboard"] --> V["versionar.py<br/>marca ?v= por contenido"]
+  E["Cambio en dashboard/web"] --> V["versionar.py<br/>marca ?v= por contenido"]
   V --> C["commit como paul-rz<br/>sin trailer"]
   C --> P["git push a main"]
   P --> B["GitHub Pages publica"]
@@ -191,13 +204,13 @@ flowchart LR
 
 | Qué | Dónde | ¿En GitHub? |
 |---|---|---|
-| Página, estilo y lógica | `~/Developer/dashboard` → `paul-rz/dashboard` | Sí, solo código |
+| Página, estilo y lógica | `dashboard/web` → `paul-rz/dashboard` | Sí, solo código |
 | Inicio y privacidad para Google | `acerca.html`, `privacidad.html` | Sí |
-| Servidor local | `~/Downloads/obsidian/scripts/servidor_local.py` | No |
+| Servidor local | `~/Downloads/obsidian/dashboard/scripts/servidor_local.py` | No |
 | Agente que lo deja prendido | `~/Library/LaunchAgents/com.paul.dashboard-local.plist` | No |
 | Llave, secreto del cliente web y permisos de Google | `~/.config/obsidian-dashboard/` (600) | **Nunca** |
-| Datos del respaldo, nota y agenda | `~/Downloads/obsidian/scripts/*.js` | **Nunca** |
-| Página local | `~/Downloads/obsidian/Dashboard.html` (la genera `dashboard_local.py`) | No |
+| Datos del respaldo, nota y agenda | `~/Downloads/obsidian/dashboard/scripts/*.js` | **Nunca** |
+| Página local | `~/Downloads/obsidian/dashboard/Dashboard.html` (la genera `dashboard_local.py`) | No |
 
 **Google Cloud**: la app "Obsidian dashboard" está
 **En producción**, con inicio, privacidad y el dominio `paulr.xyz` en Branding. Tiene dos clientes:

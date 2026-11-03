@@ -1,7 +1,7 @@
 // Dashboard web (https://dashboard.paulr.xyz). El reloj y el buscador funcionan
 // en cualquier lado; lo demás solo aparece en la Mac que tiene la llave:
 // - las luces del respaldo y la última nota las da el servidor local
-//   (scripts/servidor_local.py, en 127.0.0.1);
+//   (dashboard/scripts/servidor_local.py, en 127.0.0.1);
 // - las clases (Calendar, solo lectura) y las tareas (Tasks, con casilla) se piden
 //   directo a Google con un token de una hora que también da el servidor local.
 // La misma página corre como archivo en la Mac (Dashboard.html, <html data-modo="local">):
@@ -142,8 +142,8 @@ function deObsidian(t) {
 
 const AVISOS = {
   sin_mac: "Sin conexión con el servidor de la Mac",
-  llave: "La llave de este navegador ya no sirve: python3 scripts/servidor_local.py --llave",
-  sin_cliente: "Falta el cliente web de Google: python3 scripts/servidor_local.py --configurar-google",
+  llave: "La llave de este navegador ya no sirve: python3 ~/Downloads/obsidian/dashboard/scripts/servidor_local.py --llave",
+  sin_cliente: "Falta el cliente web de Google: python3 ~/Downloads/obsidian/dashboard/scripts/servidor_local.py --configurar-google",
   sin_autorizar: "Falta conectar Google.",
   permiso_vencido: "Google ya no reconoce el permiso.",
   otra_cuenta: "Esa no es la cuenta del dashboard; cancelé el permiso.",
@@ -156,8 +156,8 @@ const AVISOS = {
 };
 // En Dashboard.html el permiso es el de google_agenda.py (cliente de escritorio), sin botón.
 const AVISOS_LOCAL = {
-  sin_autorizar: "Falta conectar Google: python3 scripts/google_agenda.py --autorizar",
-  permiso_vencido: "Venció el permiso de Google: python3 scripts/google_agenda.py --autorizar",
+  sin_autorizar: "Falta conectar Google: python3 ~/Downloads/obsidian/dashboard/scripts/google_agenda.py --autorizar",
+  permiso_vencido: "Venció el permiso de Google: python3 ~/Downloads/obsidian/dashboard/scripts/google_agenda.py --autorizar",
 };
 // Errores que se arreglan volviendo a dar el permiso (con el botón).
 const RECONECTAR = ["sin_autorizar", "permiso_vencido", "otra_cuenta", "faltan_permisos", "sin_refresh",

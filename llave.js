@@ -1,5 +1,5 @@
 // Va en <head>, antes de pintar. Guarda la llave del enlace de una sola vez
-// (#llave=…, lo abre scripts/servidor_local.py --llave en la Mac), la borra de
+// (#llave=…, lo abre dashboard/scripts/servidor_local.py --llave en la Mac), la borra de
 // la barra de direcciones y marca <html> para que se vean las tarjetas de la Mac.
 // Sin llave, estilo.css deja solo el reloj y el buscador. Dashboard.html (data-modo="local",
 // un archivo en la Mac) no necesita llave: siempre muestra todo.
