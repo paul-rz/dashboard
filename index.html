@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Solo se carga código de aquí, de cdnjs y de Google; los datos llegan del servidor de la Mac (127.0.0.1) y de las APIs de Google. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdnjs.cloudflare.com https://accounts.google.com/gsi/client; style-src 'self' https://fonts.googleapis.com https://accounts.google.com/gsi/style; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src http://127.0.0.1:47863 https://tasks.googleapis.com https://www.googleapis.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; form-action https://search.brave.com; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Inicio</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="estilo.css">
+<script src="llave.js"></script>
+<!-- Para mostrar la nota como Markdown (DOMPurify limpia el HTML); sin internet se ve como texto plano. -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js" integrity="sha512-xeUh+KxNyTufZOje++oQHstlMQ8/rpyzPuM+gjMFYK3z5ILJGE7l2NvYL+XfliKURMpBIKKp1XoPN/qswlSMFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.4.17/purify.min.js" integrity="sha512-2wT0W6vojz3cJuLoa/DxrPVQRinkfRjFWMWIDK4NghTqObEhpem1nEkeK0d9ZE+/hyvfMNuJZlfxM4LsRgeoSA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script defer src="app.js"></script>
+</head>
+<body>
+<div class="pagina">
+  <div class="lado izq">
+  <aside class="luces" id="respaldo">
+    <div class="vault" id="r-titulo"><svg class="obs" viewBox="0 0 256 256" fill="#a88bfa" aria-hidden="true"><path d="M94.82 149.44c6.53-1.94 17.13-4.9 29.26-5.71a102.97 102.97 0 0 1-7.64-48.84c1.63-16.51 7.54-30.38 13.25-42.1l3.47-7.14 4.48-9.18c2.35-5 4.08-9.38 4.9-13.56.81-4.07.81-7.64-.2-11.11-1.03-3.47-3.07-7.14-7.15-11.21a17.02 17.02 0 0 0-15.8 3.77l-52.81 47.5a17.12 17.12 0 0 0-5.5 10.2l-4.5 30.18a149.26 149.26 0 0 1 38.24 57.2ZM54.45 106l-1.02 3.06-27.94 62.2a17.33 17.33 0 0 0 3.27 18.96l43.94 45.16a88.7 88.7 0 0 0 8.97-88.5A139.47 139.47 0 0 0 54.45 106Z"/><path d="m82.9 240.79 2.34.2c8.26.2 22.33 1.02 33.64 3.06 9.28 1.73 27.73 6.83 42.82 11.21 11.52 3.47 23.45-5.8 25.08-17.73 1.23-8.67 3.57-18.46 7.75-27.53a94.81 94.81 0 0 0-25.9-40.99 56.48 56.48 0 0 0-29.56-13.35 96.55 96.55 0 0 0-40.99 4.79 98.89 98.89 0 0 1-15.29 80.34h.1Z"/><path d="M201.87 197.76a574.87 574.87 0 0 0 19.78-31.6 8.67 8.67 0 0 0-.61-9.48 185.58 185.58 0 0 1-21.82-35.9c-5.91-14.16-6.73-36.08-6.83-46.69 0-4.07-1.22-8.05-3.77-11.21l-34.16-43.33c0 1.94-.4 3.87-.81 5.81a76.42 76.42 0 0 1-5.71 15.9l-4.7 9.8-3.36 6.72a111.95 111.95 0 0 0-12.03 38.23 93.9 93.9 0 0 0 8.67 47.92 67.9 67.9 0 0 1 39.56 16.52 99.4 99.4 0 0 1 25.8 37.31Z"/></svg><span>Obsidian vault</span><a class="log" id="r-log" href="#" title="Bitácora del respaldo" aria-label="Bitácora del respaldo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></a></div>
+    <div class="tabla">
+      <!-- íconos de línea: candado = Cryptomator, triángulo = Google Drive, reloj = próximo sync -->
+      <div class="fila" id="l-vault"><span class="luz"></span><span class="ico" aria-label="Cryptomator"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4M12 15v2"/></svg></span><time></time></div>
+      <div class="fila" id="l-nube"><span class="luz"></span><span class="ico" aria-label="Google Drive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 10 6 20l-3-5L9 5zM9 15h12l-3 5H6M15 15 9 5h6l6 10z"/></svg></span><time></time></div>
+      <div class="fila" id="l-prox"><svg class="sync" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-15.4-2.5M4 5v4h4"/><path d="M4 13a8 8 0 0 0 15.4 2.5M20 19v-4h-4"/></svg><span class="ico" aria-label="Próximo sync"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 2"/></svg></span><time id="prox"></time></div>
+    </div>
+  </aside>
+  <section class="tarjeta" id="clases">
+    <div class="tit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><span id="c-tit">Clases</span></div>
+    <div id="c-lista" class="aviso">—</div>
+  </section>
+  </div>
+
+  <main>
+    <div class="cabecera"><div class="hora" id="hora"></div><div class="fecha" id="fecha"></div></div>
+    <form action="https://search.brave.com/search" method="get">
+      <input name="q" placeholder="Buscar en la web" autofocus autocomplete="off">
+    </form>
+
+    <section class="nota" id="nota" hidden>
+      <div class="nota-cab">
+        <div><div class="nota-tit" id="n-tit"></div><div class="nota-ruta" id="n-ruta"></div></div>
+        <a id="n-abrir" href="#">Abrir en Obsidian</a>
+      </div>
+      <div class="nota-cuerpo" id="n-cuerpo"></div>
+      <div class="nota-pie" id="n-pie"></div>
+    </section>
+  </main>
+
+  <div class="lado der">
+  <section class="tarjeta" id="tareas">
+    <div class="tit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m8 12 3 3 5-6"/></svg><span>Tareas</span><span class="cuenta" id="t-cuenta"></span></div>
+    <div id="t-lista" class="tareas aviso">—</div>
+    <div class="pie-mini" id="t-pie"></div>
+  </section>
+  </div>
+</div>
+
+</body>
+</html>

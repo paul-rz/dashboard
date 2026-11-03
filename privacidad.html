@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Privacidad · Obsidian dashboard</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<main class="texto">
+  <h1><img src="favicon.svg" alt="">Política de privacidad</h1>
+  <p>Última actualización: 2 de noviembre de 2026.</p>
+  <p>Obsidian dashboard (<a href="https://dashboard.paulr.xyz">dashboard.paulr.xyz</a>) es una página de inicio
+  de uso personal. Solo la usa su autor y solo acepta su propia cuenta de Google.</p>
+
+  <h2>Qué datos de Google usa</h2>
+  <ul>
+    <li><b>Google Tasks</b> (<code>auth/tasks</code>): lee las listas y las tareas pendientes para mostrarlas.
+      Cuando se marca la casilla de una tarea, la marca como completada en Google Tasks, y la regresa a
+      pendiente si se deshace en los segundos siguientes. No crea, edita ni borra tareas.</li>
+    <li><b>Google Calendar</b> (<code>auth/calendar.readonly</code>): lee los eventos de los próximos 7 días de
+      los calendarios elegidos. Solo lectura.</li>
+    <li><b>Correo de la cuenta</b> (<code>openid</code>, <code>email</code>): solo para comprobar que la cuenta
+      sea la del autor.</li>
+  </ul>
+
+  <h2>Dónde se guardan</h2>
+  <ul>
+    <li>La página no tiene servidor propio: GitHub Pages solo entrega archivos estáticos, y las peticiones a
+      Google salen del navegador directo a sus APIs.</li>
+    <li>El permiso de Google (el token de actualización) se guarda únicamente en la computadora del autor,
+      en un servidor local que solo escucha en 127.0.0.1.</li>
+    <li>Las tareas y los eventos se muestran en el navegador, que guarda una copia de lo último que vio en
+      su almacenamiento local para mostrarlo más rápido. No salen de esa computadora.</li>
+    <li>La página carga su fuente de Google Fonts y dos bibliotecas de cdnjs (Cloudflare). Esos servicios
+      reciben la dirección IP del navegador, como en cualquier petición web, pero ningún dato de Google.</li>
+  </ul>
+
+  <h2>Con quién se comparten</h2>
+  <p>Con nadie. No hay analítica, publicidad ni cookies, y los datos no se venden, no se transfieren y no se
+  usan para entrenar modelos de inteligencia artificial.</p>
+
+  <h2>Uso limitado</h2>
+  <p>El uso y la transferencia a cualquier otra app de la información recibida de las APIs de Google por parte
+  de Obsidian dashboard se ajustarán a la
+  <a href="https://developers.google.com/terms/api-services-user-data-policy">Política de Datos del Usuario de
+  los Servicios de API de Google</a>, incluidos los requisitos de Uso Limitado.</p>
+
+  <h2>Cómo quitar el permiso</h2>
+  <p>En <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>, elige Obsidian
+  dashboard y quita el acceso. Desde ese momento la página deja de ver tus tareas y eventos.</p>
+
+  <h2>Contacto</h2>
+  <p>Abre un issue en <a href="https://github.com/paul-rz/dashboard/issues">github.com/paul-rz/dashboard</a>.</p>
+
+  <p class="pie"><a href="acerca.html">Acerca de</a> · <a href="./">Ir al dashboard</a></p>
+</main>
+</body>
+</html>
