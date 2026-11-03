@@ -31,7 +31,7 @@ function reloj() {
   $("hora").textContent = hm(d);
   $("fecha").textContent = d.toLocaleDateString("es-MX", {weekday: "long", day: "numeric", month: "long"});
   if (!LLAVE) return;
-  $("prox").textContent = HORAS.length ? `Próximo sync en ${faltan()}` : "—";
+  $("prox").textContent = HORAS.length ? `Sync en ${faltan()}` : "—";
   for (const c of $("l-prox").children) c.title = HORAS.length ? `Próximo sync: ${proxima()}` : "";
 }
 

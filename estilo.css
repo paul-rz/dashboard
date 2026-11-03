@@ -31,7 +31,7 @@ html:not(.llave) .pagina{grid-template-columns:minmax(0,820px);grid-template-are
 .obs{width:16px;height:16px;flex:none}
 .sync{width:16px;height:16px;justify-self:center;color:var(--verde)}
 /* las filas comparten una rejilla de tres columnas: luz (o sync), ícono, hora alineada */
-.tabla{display:grid;grid-template-columns:16px 18px 1fr;column-gap:8px;row-gap:5px;align-items:center;white-space:nowrap}
+.tabla{display:grid;grid-template-columns:16px 18px minmax(0,1fr);column-gap:8px;row-gap:5px;align-items:center;white-space:nowrap}
 .fila{display:contents}
 .ico{width:18px;height:18px;display:block;color:var(--tx)}
 .ico svg{width:100%;height:100%;display:block}
@@ -39,7 +39,7 @@ html:not(.llave) .pagina{grid-template-columns:minmax(0,820px);grid-template-are
 .on .luz{background:var(--verde);box-shadow:0 0 6px var(--verde)}
 .warn .luz{background:var(--ambar);box-shadow:0 0 6px var(--ambar)}
 .crit .luz{background:var(--rojo);box-shadow:0 0 6px var(--rojo)}
-.fila time{padding-left:10px;font-variant-numeric:tabular-nums;opacity:.75}
+.fila time{padding-left:10px;font-variant-numeric:tabular-nums;opacity:.75;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .warn time{color:var(--ambar);opacity:1} .crit time{color:var(--rojo);opacity:1}
 
 .cabecera{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:20px;row-gap:4px;margin-bottom:16px}
@@ -59,19 +59,19 @@ input:focus{border-color:var(--ac)}
 .tit svg{width:16px;height:16px;flex:none}
 .tit .cuenta{margin-left:auto;color:var(--mut);font-weight:400}
 .aviso{font-size:12.5px;line-height:1.5}
-.pie-mini{margin-top:8px;font-size:11.5px;opacity:.7}
+.pie-mini{margin-top:8px;font-size:11.5px;opacity:.85}
 .clase{display:grid;grid-template-columns:16px max-content minmax(0,1fr);column-gap:8px;align-items:baseline;padding:3px 0}
 .clase .luz{align-self:center;background:transparent}
 .clase.ahora .luz{background:var(--verde);box-shadow:0 0 6px var(--verde)}
-.clase.paso{opacity:.45}
-.clase time{font-variant-numeric:tabular-nums}
+.clase.paso{opacity:.55}
+.clase time{font-variant-numeric:tabular-nums;color:var(--tx);font-weight:600}
 .clase b{color:var(--tx);font-weight:500;overflow-wrap:anywhere}
 .clase small{display:block;font-size:12px;font-weight:400;color:var(--mut)}
 .tareas{max-height:calc(100vh - 120px);overflow-y:auto}
-.lista{margin:8px 0 2px;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+.lista{margin:8px 0 2px;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ac);font-weight:600}
 .tarea{display:grid;grid-template-columns:16px minmax(0,1fr) auto;column-gap:8px;align-items:baseline;padding:3px 0}
 .tarea.sub{padding-left:14px}
-.circ{width:11px;height:11px;padding:0;background:none;border:1.5px solid var(--mut);border-radius:50%;justify-self:center;align-self:center;position:relative;cursor:pointer}
+.circ{width:11px;height:11px;padding:0;background:none;border:1.5px solid var(--tx);border-radius:50%;justify-self:center;align-self:center;position:relative;cursor:pointer}
 .circ::after{content:"";position:absolute;inset:-7px}   /* el clic vale un poco alrededor del círculo */
 .circ:hover,.circ:focus-visible{border-color:var(--ac);outline:none}
 .circ:disabled{cursor:default}
@@ -81,7 +81,7 @@ input:focus{border-color:var(--ac)}
 .conectar{margin-top:8px;font:inherit;font-size:13px;color:var(--ac);background:none;border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
 .conectar:hover,.conectar:focus-visible{border-color:var(--ac);outline:none}
 .pie-mini .conectar{margin:0 0 0 6px;font-size:11.5px;padding:2px 8px}
-.tarea time{font-size:12px;white-space:nowrap}
+.tarea time{font-size:12px;white-space:nowrap;color:var(--ac);font-weight:500}
 .tarea time.hoy{color:var(--ambar)} .tarea time.tarde{color:var(--rojo)}
 
 /* última nota editada */
